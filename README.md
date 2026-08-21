@@ -12,6 +12,17 @@ OrcaFlex simulation ──(CSV export)──> ship_emulation pipeline ──(RTD
                                                                         Robot under test
 ```
 
+## Getting started
+Make a virtual environment in this repo, then pip install common robot interface:
+```
+cd common_robot_interface
+pip3 install -e .
+```
+Then install whatever packages are missing when you try to run. You can run the simulation of the UR robot by calling the bash script that spins up the docker (you may need to change some paths):
+```
+bash ur_simulation_suite-tactip/launch_docker.sh
+```
+
 ## Application Context
 
 Ship motion emulation is the demonstration experiment for a novel controller because it excites all 6 DOF in a physically motivated way.
