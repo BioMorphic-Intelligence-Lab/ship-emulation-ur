@@ -1,0 +1,1 @@
+docker run --rm -it -e ROBOT_MODEL=UR16e -p 6080:6080 -p 29999:29999 -p 30001:30001 -p 30004:30004 -p 30002:30002 -p 50002:50002 -v "${PWD}/ur_simulation_suite-tactip/urcaps:/urcaps" -v "${PWD}/ur_simulation_suite-tactip/programs:/ursim/programs" universalrobots/ursim_e-series

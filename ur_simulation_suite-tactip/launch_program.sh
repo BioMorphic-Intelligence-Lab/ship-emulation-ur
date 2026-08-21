@@ -1,0 +1,1 @@
+source .env && echo y | plink eugenio@TUD1006024 -pw 070289 "{ echo "load robot_interaction_lesson_using_file.urp"; echo "play"; } | nc 127.0.0.1 29999"

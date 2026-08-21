@@ -1,0 +1,48 @@
+  global returnVar=0
+  global Waypoint_3_p=p[.474982043880, .042583352657, .517603489187, 2.684317988755, -1.614976856204, -.053817350726]
+  global Waypoint_3_q=[0.45686861652646427, -1.5056286306131499, -1.6941157378163414, -1.5383557301628166, 1.595100113507578, -0.031000033463526755]
+  global Waypoint_4_p=p[.474982043805, .042583352620, .325061155887, 2.684317988755, -1.614976856204, -.053817350726]
+  global Waypoint_4_q=[0.45686861643832444, -1.6502894002349606, -2.1243241468615377, -0.96348655149795, 1.595100113505314, -0.03100003355165981]
+  global Waypoint_1_p=p[-.184547808006, -.439731064965, .278361155850, -.001221359682, 3.116276528482, .038891915637]
+  global Waypoint_1_q=[-1.6006999999999998, -1.7271, -2.2029999999999994, -0.8079999999999998, 1.5951, -0.030999999999999694]
+  global Waypoint_2_p=p[.474982062654, .042583366370, .278361155850, 2.684318015779, -1.614976858125, -.053817117526]
+  global Waypoint_2_q=[0.4568686551761139, -1.7271, -2.2029999999999994, -0.8079999999999998, 1.5951, -0.030999999999999694]
+
+
+  while (True):
+
+    switch_1 = returnVar
+
+    if (1 == switch_1):
+
+      popup("Wrist singularity", "Message", False, False, blocking=True)
+
+      while (True):
+
+
+        movej(get_inverse_kin(Waypoint_3_p, qnear=Waypoint_3_q), a=1.3962634015954636, v=1.0471975511965976)
+
+        movej(get_inverse_kin(Waypoint_4_p, qnear=Waypoint_4_q), a=1.3962634015954636, v=1.0471975511965976)
+      end
+
+      global returnVar=0
+    elif (2 == switch_1):
+
+
+      popup("Elbow singularity", "Message", False, False, blocking=True)
+
+
+      movel(Waypoint_1_p, a=1.2, v=0.25)
+
+      movel(Waypoint_2_p, a=1.2, v=0.25)
+
+      global returnVar=0
+    else:
+
+
+      popup("<html>Wrist singularity=1<br>Elbow singularity=2<br>Pick up tool=3</html>", "Message", False, False, blocking=True)
+
+       returnVar = request_integer_from_primary_client(">Wrist=1, Elbow=2 PnP=3")
+    end
+  end
+end

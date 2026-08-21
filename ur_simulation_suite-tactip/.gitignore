@@ -1,0 +1,5 @@
+# ignore any file called .old#
+**.old**
+**.bak**
+**.txt**
+**.urp**

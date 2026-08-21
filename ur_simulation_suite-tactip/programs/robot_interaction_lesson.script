@@ -1,0 +1,243 @@
+def robot_interaction_lesson():
+  set_target_payload(0.000000, [0.000000, 0.000000, 0.000000], [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000])
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  step_count_9ea1cc9d_da31_4f84_8dff_ab905187e73d = 0.0
+  thread Step_Counter_Thread_1bac8c33_9164_401d_bc3f_3e9f6af0481b():
+    while (True):
+      step_count_9ea1cc9d_da31_4f84_8dff_ab905187e73d = step_count_9ea1cc9d_da31_4f84_8dff_ab905187e73d + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_1bac8c33_9164_401d_bc3f_3e9f6af0481b()
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_gravity([0.0, 0.0, 9.82])
+  set_safety_mode_transition_hardness(1)
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  # begin: URCap Installation Node
+  #   Source: External Control, 1.0.5, FZI Research Center for Information Technology
+  #   Type: External Control
+  # end: URCap Installation Node
+  while (True):
+    $ 2 "Robot Program"
+    $ 3 "Script: robot_interaction_lesson_file.script"
+    global returnVar = -1
+    global returnBool = True
+    global descriptionString = ""
+    
+    global speed_ms    = 0.250
+    global speed_rads  = 0.750
+    global accel_mss   = 2
+    global accel_radss = 1
+    global blend_radius_m = 0.0
+    global ref_frame = p[0,0,0,0,0,0]
+    
+    global Waypoint_home_wrist_down_q = [.0, -90.0,  -90.0,  -90.0,  0.0, .0]
+    global Waypoint_home_wrist_hor_q = [.0, -90.0,  -90.0,  -90.0,  90.0, .0]
+    
+    def q2r(q):
+      # joint target q (vector) from deg -> rad
+      i = 0
+      while (i < q.length()):
+        # deg -> rad of i
+        q[i] = d2r(q[i])
+        i = i + 1
+      end
+      return q
+    end
+    
+    thread popup_thread():
+      returnBool = request_boolean_from_primary_client(descriptionString + " - Continue?")
+    end
+    
+    def move_home():
+      popup("Move Home", "Message", False, False, blocking = False)
+      movej(q2r(Waypoint_home_wrist_hor_q), a = 1.2, v = 1)
+      global returnVar = -1
+    end
+    
+    def move_j_vs_l():
+      descriptionString = "MoveJ VS MoveL"
+      speed_rads  = 0.750
+      accel_radss = 3
+      while (returnBool):
+        thrd = run popup_thread()
+        movej([-0.000000, -1.674961, -1.998559, -1.038862, 1.570796, -0.000000],accel_radss,speed_rads,0,0)
+        movej([0.249111, -1.865705, -1.747895, -2.743309, 0.249971, 1.653736],accel_radss,speed_rads,0,0.000)
+        movej([-0.000000, -1.674961, -1.998559, -1.038862, 1.570796, -0.000000],accel_radss,speed_rads,0,0.000)
+        sleep(2)
+        movel(pose_trans(ref_frame,p[0.479850, -0.174150, 0.357365, 1.190222, -1.204253, 1.226136]),accel_mss,speed_ms,0,0.000)
+        movel(pose_trans(ref_frame,p[0.479850, -0.174150, 0.357365, 2.221441, -2.221441, -0.000000]),accel_mss,speed_ms,0,0.000)
+        sleep(2)
+        kill thrd
+      end
+      returnBool = True
+      global returnVar = -1
+    end
+    
+    def move_wrist_sing():
+      descriptionString = "Wrist singularity"
+      speed_rads  = 0.750
+      accel_radss = 3
+      while (returnBool):
+        thrd = run popup_thread()
+        movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.572018, -1.598722, -1.452987, 0.000000, -0.087790],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.579872, -1.638864, -1.259430, 0.000000, -0.237190],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.603958, -1.683021, -0.972148, 0.000000, -0.448375],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.645322, -1.706757, -0.666890, 0.000000, -0.703019],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.691224, -1.705187, -0.410152, 0.000000, -0.913680],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.735381, -1.686686, -0.200538, 0.000000, -1.097812],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.785995, -1.648987, 0.013788, 0.000000, -1.291718],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.830850, -1.601165, 0.191288, 0.000000, -1.467473],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.853016, -1.572542, 0.275587, 0.000000, -1.553343],accel_radss,speed_rads,0,0)
+        sleep(0.500)
+        movej([0.000000, -1.830850, -1.601165, 0.191288, 0.000000, -1.467473],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.785995, -1.648987, 0.013788, 0.000000, -1.291718],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.735381, -1.686686, -0.200538, 0.000000, -1.097812],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.691224, -1.705187, -0.410152, 0.000000, -0.913680],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.645322, -1.706757, -0.666890, 0.000000, -0.703019],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.603958, -1.683021, -0.972148, 0.000000, -0.448375],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.579872, -1.638864, -1.259430, 0.000000, -0.237190],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.572018, -1.598722, -1.452987, 0.000000, -0.087790],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        sleep(2)
+        kill thrd
+      end
+      returnBool = True
+      global returnVar = -1
+    end
+    
+    def move_wrist_lock():
+      descriptionString = "Wrist lock"
+      speed_rads  = 1.0
+      accel_radss = 1
+      while (returnBool):
+        thrd = run popup_thread()
+        movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        movej([-0.131772, -1.570622, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        movej([0.175755, -1.570622, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        sleep(0.500)
+        movej([0.000000, -1.853016, -1.572542, 0.275587, 0.000000, -1.553343],accel_radss,speed_rads,0,0)
+        movej([-0.177537, -1.933650, -1.456711, 0.248776, 0.177537, -1.561721],accel_radss,speed_rads,0,0)
+        movej([0.197957, -1.804217, -1.638632, 0.301247, -0.197957, -1.561721],accel_radss,speed_rads,0,0)
+        movej([0.000000, -1.853016, -1.572542, 0.275587, 0.000000, -1.553343],accel_radss,speed_rads,0,0)
+        sleep(0.500)
+        kill thrd
+      end
+      returnBool = True
+      global returnVar = -1
+    end
+    
+    def move_configurations():
+      descriptionString = "Configurations"
+      speed_rads  = 1.750
+      accel_radss = 2
+      while (returnBool):
+        thrd = run popup_thread()
+        movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        sleep(4)
+        movej([2.445311, -1.252146, 0.840833, 0.411313, 2.445311, 1.570796],accel_radss,speed_rads,0,0)
+        sleep(4)
+        movej([2.445311, 0.003025, -1.569788, -1.574830, -2.445311, -1.570796],accel_radss,speed_rads,0,0.000)
+        sleep(4)
+        movej([0.000000, -2.604171, 0.840833, -4.519844, 0.000000, 1.570796],accel_radss,speed_rads,0,0.000)
+        sleep(4)
+        movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+        sleep(4)
+        kill thrd
+      end
+      returnBool = True
+      global returnVar = -1
+    end
+    
+    def move_shoulder_sing():
+      descriptionString = "Shoulder singularity"
+      speed_rads  = 0.750
+      accel_radss = 3
+    
+      movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+      while (returnBool):
+        thrd = run popup_thread()
+        movej([0.006772, -0.754275, -1.507526, -0.877567, 0.001280, -1.572671],accel_radss,speed_rads,0,0)
+        movej([0.009351, -1.134897, -1.510392, -0.498442, -0.001330, -1.568309],accel_radss,speed_rads,0,blend_radius_m)
+        movej([0.006772, -0.754275, -1.507526, -0.877567, 0.001280, -1.572671],accel_radss,speed_rads,0,0)
+        movej([0.009351, -1.134897, -1.510392, -0.498442, -0.001330, -1.568309],accel_radss,speed_rads,0,0)
+        movej([0.006772, -0.754275, -1.507526, -0.877567, 0.001280, -1.572671],accel_radss,speed_rads,0,0)
+        movej([0.009351, -1.134897, -1.510392, -0.498442, -0.001330, -1.568309],accel_radss,speed_rads,0,0)
+        movej([-0.191819, -1.207124, -1.480174, -0.454281, 0.199840, -1.570461],accel_radss,speed_rads,0,blend_radius_m)
+        movel(pose_trans(ref_frame,p[-0.077534, -0.318301, 0.905571, 1.215104, -1.205396, 1.215104]),accel_mss,speed_ms,0,blend_radius_m)
+        movel(pose_trans(ref_frame,p[0.118235, -0.316731, 0.905640, 1.215104, -1.205396, 1.215104]),accel_mss,speed_ms,0,0)
+        movel(pose_trans(ref_frame,p[-0.077534, -0.318301, 0.905571, 1.215104, -1.205396, 1.215104]),accel_mss,speed_ms,0,0)
+        movel(pose_trans(ref_frame,p[0.118235, -0.316731, 0.905640, 1.215104, -1.205396, 1.215104]),accel_mss,speed_ms,0,0)
+        movel(pose_trans(ref_frame,p[-0.077534, -0.318301, 0.905571, 1.215104, -1.205396, 1.215104]),accel_mss,speed_ms,0,0)
+        movel(pose_trans(ref_frame,p[0.118235, -0.316731, 0.905640, 1.215104, -1.205396, 1.215104]),accel_mss,speed_ms,0,0)
+        movej([0.346441, -1.038811, -1.537605, -0.565185, -0.338419, -1.570439],accel_radss,speed_rads,0,blend_radius_m)
+        kill thrd
+      end
+      returnBool = True
+      global returnVar = -1
+    end
+    
+    def move_elbow_sing():
+      descriptionString = "Elbow singularity"
+      speed_rads  = 0.750
+      accel_radss = 3
+    
+      movej([0.000000, -1.570796, -1.570796, -1.570796, 0.000000, 0.000000],accel_radss,speed_rads,0,0)
+      while (returnBool):
+        thrd = run popup_thread()
+        movej([-0.100130, -2.633562, -0.150574, -0.357457, -0.031643, -1.570622],accel_radss,speed_rads,0,0)
+        movej([-0.100130, -2.762839, 0.150574, -0.529334, -0.031643, -1.570622],accel_radss,speed_rads,0,0.000)
+        movej([-0.100130, -2.633562, -0.150574, -0.357457, -0.031643, -1.570622],accel_radss,speed_rads,0,0.000)
+        movej([-0.100130, -2.762839, 0.150574, -0.529334, -0.031643, -1.570622],accel_radss,speed_rads,0,0.000)
+        movej([-0.100130, -2.633562, -0.150574, -0.357457, -0.031643, -1.570622],accel_radss,speed_rads,0,0.000)
+        movej([-0.100130, -2.762839, 0.150574, -0.529334, -0.031643, -1.570622],accel_radss,speed_rads,0,0.000)
+        movej([-0.100130, -2.633562, -0.150574, -0.357457, -0.031643, -1.570622],accel_radss,speed_rads,0,0.000)
+        kill thrd
+      end
+      returnBool = True
+      global returnVar = -1
+    end
+    
+    # main program
+    while (True):
+        switch_1 = returnVar
+        if (0 == switch_1):
+          move_home()
+        elif (1 == switch_1):
+          move_j_vs_l()
+        elif (2 == switch_1):
+          move_wrist_sing()
+        elif (3 == switch_1):
+          move_elbow_sing()
+        elif (4 == switch_1):
+          move_shoulder_sing()
+        elif (5 == switch_1):
+          move_wrist_lock()
+        elif (6 == switch_1):
+          move_configurations()
+        else:
+          returnVar = request_integer_from_primary_client("Home:0 J_vs_L:1 W_sin:2 E_sin:3 S_sin:4 W_lock:5 Conf:6")
+          # popup("<html>Wrist singularity=1<br>Elbow singularity=2<br>Pick up tool=3</html>", "Message", False, False, blocking = True)
+          # my_variable = request_boolean_from_primary_client(“<html>Width: 20 inches Height: 10 inches Would you like to continue with these settings?<\html>”)
+          # returnVar = request_float_from_primary_client(“description string”)
+          # returnVar = request_integer_from_primary_client(“description string”)
+          # returnVar = request_string_from_primary_client(“description string”)
+          # global var = 12
+          # global var_two = 47
+          # popup("<html>look, a variable! "+to_str(var)+"<br>look, another! "+to_str(var_two)+"<html>")
+        end
+    end
+  end
+end
